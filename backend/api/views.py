@@ -75,31 +75,31 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(methods=["GET"], detail=False,
+    @action(methods=['GET'], detail=False,
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         """Скачивание списка покупок"""
         shopping_result = {}
         ingredients = IngredientRecipes.objects.filter(
             recipes__shoppinglist__user=request.user
-        ).values_list("ingredients__name",
-                      "ingredients__measurement_unit",
-                      "amount")
+        ).values_list('ingredients__name',
+                      'ingredients__measurement_unit',
+                      'amount')
         for ingredient in ingredients:
             name = ingredient[0]
             if name not in shopping_result:
                 shopping_result[name] = {
-                    "measurement_unit": ingredient[1],
-                    "amount": ingredient[2],
+                    'measurement_unit': ingredient[1],
+                    'amount': ingredient[2],
                 }
             else:
-                shopping_result[name]["amount"] += ingredient[2]
+                shopping_result[name]['amount'] += ingredient[2]
         shopping_itog = (
-            f"{name} - {value['amount']} " f"{value['measurement_unit']}\n"
+            f'{name} - {value['amount']} ' f'{value['measurement_unit']}\n'
             for name, value in shopping_result.items()
         )
-        response = HttpResponse(shopping_itog, content_type="text/plain")
-        response["Content-Disposition"] = 'attachment; filename="shoppinglist.txt"'
+        response = HttpResponse(shopping_itog, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename='shoppinglist.txt''
         return response
 
 
@@ -116,7 +116,7 @@ class RecipeFavoritesViewSet(viewsets.ModelViewSet):
         """Добавление рецепта
         в список избранного
         """
-        recipes_id = self.kwargs["id"]
+        recipes_id = self.kwargs['id']
         recipes = get_object_or_404(Recipe, id=recipes_id)
         RecipeFavorites.objects.create(user=request.user, recipes=recipes)
         serializer = RecipeFavoritesSerializer()
@@ -129,7 +129,7 @@ class RecipeFavoritesViewSet(viewsets.ModelViewSet):
         """Удаление рецепта
         из списка избранного
         """
-        recipes_id = self.kwargs["id"]
+        recipes_id = self.kwargs['id']
         user_id = request.user.id
         RecipeFavorites.objects.filter(
             user__id=user_id, recipes__id=recipes_id
@@ -148,15 +148,15 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """Создание подписки"""
-        user_id = self.kwargs["id"]
+        user_id = self.kwargs['id']
         user = get_object_or_404(CustomUser, id=user_id)
         subscribe = Follow.objects.create(user=request.user, author=user)
-        serializer = FollowSerializer(subscribe, context={"request": request})
+        serializer = FollowSerializer(subscribe, context={'request': request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete(self, request, *args, **kwargs):
         """Удаление подписки"""
-        author_id = self.kwargs["id"]
+        author_id = self.kwargs['id']
         user_id = request.user.id
         Follow.objects.filter(user_id, author_id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -177,7 +177,7 @@ class ShoppingViewSet(viewsets.ModelViewSet):
         """Добавление рецепта в
         список покупок
         """
-        recipe_id = self.kwargs["id"]
+        recipe_id = self.kwargs['id']
         recipes = get_object_or_404(Recipe, id=recipe_id)
         ShoppingList.objects.create(user=request.user, recipes=recipes)
         serializer = ShoppingListSerializer()
@@ -190,7 +190,7 @@ class ShoppingViewSet(viewsets.ModelViewSet):
         """Удаление рецепта из
         списка покупок
         """
-        recipe_id = self.kwargs["id"]
+        recipe_id = self.kwargs['id']
         user_id = request.user.id
         ShoppingList.objects.filter(user__id=user_id,
                                     recipes__id=recipe_id).delete()
