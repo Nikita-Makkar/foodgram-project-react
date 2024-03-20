@@ -10,16 +10,16 @@ app_name = 'api'
 
 router = routers.DefaultRouter()
 
-router.register("tags", TagViewSet)
-router.register("users", CustomUserViewSet)
-router.register("ingredients", IngredientsViewSet)
-router.register("recipes", RecipeViewSet)
+router.register('tags', TagViewSet)
+router.register('users', CustomUserViewSet)
+router.register('ingredients', IngredientsViewSet)
+router.register('recipes', RecipeViewSet)
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('', include("djoser.urls")),
-    re_path(r'auth/', include('djoser.urls.authtoken')),
+    re_path('auth/', include('djoser.urls.authtoken')),
     path('recipes/<int:id>/favorite/',
          RecipeFavoritesViewSet.as_view(
               {'post': 'create', 'delete': 'delete'}),
