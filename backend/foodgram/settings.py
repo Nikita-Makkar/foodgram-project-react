@@ -151,3 +151,6 @@ MEDIA_ROOT = '/app/media/'
 STATIC_URL = '/static/django/'
 
 STATIC_ROOT = '/app/static_django/'
+
+
+
