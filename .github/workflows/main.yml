@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: # Добавляем возможность запуска по запросу
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
 
 jobs:
   tests:
