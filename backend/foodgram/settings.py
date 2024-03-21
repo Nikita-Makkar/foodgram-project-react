@@ -3,18 +3,14 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'o35&qx9l*ciacue^((q(&^jcc7549ptben+*e-wxsl&l5-l1)7'
+
 SECRET_KEY = os.getenv('SECRET_KEY',
                        'o35&qx9l*ciacue^((q(&^jcc7549ptben+*e-wxsl&l5-l1)7')
 
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', False)))
 
-#DEBUG = os.getenv('DEBUG_VALUE') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
 
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
-
-
-ALLOWED_HOSTS = ['*',]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
