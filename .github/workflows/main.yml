@@ -1,16 +1,10 @@
 name: Main foodgram-project-react Workflow
-# Перечень событий-триггеров, при которых должен запускаться workflow
+
 on:
-  # Событие push возникает,
-  # когда изменения исходного кода приходят на сервер GitHub
   push:
-    # Отслеживаем изменения только в ветке main
     branches:
       - main
-# Перечень задач
 jobs:
-  # Единственная задача — склонировать код 
-  # и вывести в консоль дерево файлов
   checkout-and-print-tree:
     runs-on: ubuntu-latest
     steps:
