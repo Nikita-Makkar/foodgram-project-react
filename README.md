@@ -25,6 +25,3 @@ python manage.py migrate`
  python3 manage.py import_data ingredients.csv
 
 
-
- вот
-
