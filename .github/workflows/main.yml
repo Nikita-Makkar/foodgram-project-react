@@ -1,5 +1,4 @@
 name: Main foodgram-project-react Workflow
-
 on:
   push:
     branches:
@@ -8,11 +7,7 @@ jobs:
   checkout-and-print-tree:
     runs-on: ubuntu-latest
     steps:
-      # На GitHub Actions есть готовые описания шагов, 
-      # их можно использовать в своих workflow.
-      # Применим готовое описание шага для получения исходного кода
-      - name: Check out repository code  # Имя шага задаём сами
-        uses: actions/checkout@v3  # Берём готовое решение из библиотеки GitHub Actions
-      # Выполняем команду tree в текущей директории
+      - name: Check out repository code
+        uses: actions/checkout@v3
       - name: Print project tree
         run: tree .
