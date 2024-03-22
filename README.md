@@ -22,4 +22,4 @@ python manage.py migrate`
 
  ./python3 manage.py createsuperuser
 
- python3 manage.py import_data ingredients.csv
+ python3 ./manage.py import_data ingredients.csv
