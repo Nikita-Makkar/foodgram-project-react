@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 from rest_framework.authtoken.models import Token
 
-from recipes.models import Recipe, Ingredient, RecipeIngredient
+from recipes.models import Recipe, Ingredient, IngredientRecipes
 
 from users.models import CustomUser
 
@@ -29,7 +29,7 @@ class RecipesApiTestCase(APITransactionTestCase):
             name='Salt',
             measurement_unit='kg',
         )
-        self.recipe_ing = RecipeIngredient.objects.create(
+        self.recipe_ing = IngredientRecipes.objects.create(
             ingredient=self.salt,
             amount=32,
             recipe=self.recipe
@@ -62,7 +62,7 @@ class RecipesApiTestCase(APITransactionTestCase):
         self.assertTrue(Recipe.objects.filter(**data).exists())
         ing = ingredients[0]
         self.assertEqual(ing.get('id'), self.salt.id)
-        rec_ing = RecipeIngredient.objects.filter(
+        rec_ing = IngredientRecipes.objects.filter(
             amount=ing.get('amount'),
             ingredient=self.salt.id).last()
         self.assertEqual(ing.get('amount'), str(rec_ing.amount))
