@@ -21,8 +21,8 @@ urlpatterns = [
     path('', include("djoser.urls")),
     re_path('auth/', include('djoser.urls.authtoken')),
     path('recipes/<int:id>/favorite/',
-         RecipeFavoritesViewSet.as_view(
-              {'post': 'create', 'delete': 'delete'}),
+         RecipeFavoritesViewSet.as_view({'post': 'create',
+                                         'delete': 'delete'}),
          name='favorite',
          ),
 

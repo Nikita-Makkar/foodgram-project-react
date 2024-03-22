@@ -80,8 +80,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """
         shopping_result = {}
         shopping_list_recipes = Recipe.objects.filter(
-            shoppingcart__user=request.user
-            )
+            shoppingcart__user=request.user)
         ingredients = IngredientRecipes.objects.filter(
             recipes__in=shopping_list_recipes
         ).values('ingredients__name',
@@ -153,8 +152,7 @@ class RecipeFavoritesViewSet(viewsets.ModelViewSet):
                                               recipes=recipe).exists():
             return Response(
                 {RECIPE_NOT_IN_FAVORITES_ERROR},
-                status=status.HTTP_400_BAD_REQUEST
-                )
+                status=status.HTTP_400_BAD_REQUEST)
         RecipeFavorites.objects.filter(
             user__id=user_id,
             recipes__id=recipe_id).delete()
@@ -198,8 +196,7 @@ class FollowViewSet(viewsets.ModelViewSet):
         try:
             subscription = Follow.objects.get(
                 user_id=user_id,
-                author_id=author_id
-                )
+                author_id=author_id)
         except Follow.DoesNotExist:
             return Response(
                 {SUBSCRIPTION_NOT_FOUND_ERROR},
@@ -258,4 +255,3 @@ class ShoppingViewSet(viewsets.ModelViewSet):
         ShoppingList.objects.filter(user__id=user_id,
                                     recipes__id=recipe_id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-

@@ -149,7 +149,6 @@ class IngredientRecipes(models.Model):
         ]
 
 
-
 class RecipeFavorites(models.Model):
     """Модель Избранные рецепты"""
     id = models.AutoField(primary_key=True)

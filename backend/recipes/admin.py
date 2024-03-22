@@ -17,7 +17,6 @@ class RecipeAdmin(admin.ModelAdmin):
     """Админ-зона рецептов.
     Добавлен просмотр кол-ва добавленных рецептов в избранное.
     """
-    
     inlines = [RecipeIngredientInline]
     list_display = ('name', 'author', 'favorites_count')
     search_fields = ('name',)
