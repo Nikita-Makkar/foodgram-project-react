@@ -157,7 +157,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         image = validated_data.pop('image')
         ingredients_data = validated_data.pop('ingredients')
         recipes = Recipe.objects.create(image=image, **validated_data)
-        tags = self.initial_data.get('tags')
+        tags = self.validated_data.get('tags')
         recipes.tags.set(tags)
         self.create_ingredients(ingredients_data, recipes)
         return recipes
@@ -171,7 +171,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time', instance.cooking_time
         )
         instance.tags.clear()
-        tags_data = self.initial_data.get('tags')
+        tags_data = validated_data.pop('tags', [])
         instance.tags.set(tags_data)
         IngredientRecipes.objects.filter(recipes=instance).all().delete()
         self.create_ingredients(validated_data.get('ingredients'), instance)
