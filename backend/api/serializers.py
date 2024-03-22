@@ -124,8 +124,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             if amount is None or int(amount) < 1:
                 raise serializers.ValidationError(INGREDIENT_AMOUNT_ERROR)
             amount = ingredient_item['amount']
-            if not (isinstance(ingredient_item['amount'], int)
-                    or ingredient_item['amount'].isdigit()):
+            if not (
+                isinstance(ingredient_item['amount'], int)
+                or ingredient_item['amount'].isdigit()
+            ):
                 raise ValidationError(INGREDIENT_AMOUNT_FORMAT_ERROR)
             ingredients_result.append({'ingredients': ingredient,
                                        'amount': amount
