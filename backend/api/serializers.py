@@ -1,12 +1,9 @@
-from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from api.constants import (IMAGE_NOT_IN_RECIPE, INGREDIENT_ALREADY_ADDED,
                            INGREDIENT_AMOUNT_ERROR,
-                           INGREDIENT_AMOUNT_FORMAT_ERROR,
                            INGREDIENT_WITH_THIS_ID_NOT_EXISTS,
                            INGREDIENTS_NOT_IN_RECIPE, NOT_ID_INGREDIENTS,
                            SUBSCRIPTION_ALREADY_EXISTS_ERROR,
@@ -84,21 +81,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return obj.shoppingcart.filter(user=user).exists()
 
-    def validate(self, data):
-        """Метод для валидации данных
-        перед созданием рецепта
-        """
-        ingredients = self.initial_data.get('ingredients')
-        tags_data = self.initial_data.get('tags')
-        image = self.initial_data.get('image')
-
-        if not ingredients:
-            raise serializers.ValidationError(INGREDIENTS_NOT_IN_RECIPE)
-        if not tags_data:
-            raise serializers.ValidationError(TAGS_NOT_IN_RECIPE)
-        if not image:
-            raise serializers.ValidationError(IMAGE_NOT_IN_RECIPE)
-
+    def validate_ingredients(self, ingredients):
+        """Валидация ингредиентов"""
         ingredients_result = []
         ingredient_ids = set()
         for ingredient_item in ingredients:
@@ -116,35 +100,46 @@ class RecipeSerializer(serializers.ModelSerializer):
             except Ingredient.DoesNotExist:
                 raise serializers.ValidationError(
                     INGREDIENT_WITH_THIS_ID_NOT_EXISTS)
-            ingredient = get_object_or_404(Ingredient,
-                                           id=ingredient_item['id']
-                                           )
-            if ingredient in ingredients_result:
-                raise serializers.ValidationError(INGREDIENT_ALREADY_ADDED)
-            if amount is None or int(amount) < 1:
-                raise serializers.ValidationError(INGREDIENT_AMOUNT_ERROR)
-            amount = ingredient_item['amount']
-            if not (
-                isinstance(ingredient_item['amount'], int)
-                or ingredient_item['amount'].isdigit()
-            ):
-                raise ValidationError(INGREDIENT_AMOUNT_FORMAT_ERROR)
-            ingredients_result.append({'ingredients': ingredient,
-                                       'amount': amount
-                                       })
-        data['ingredients'] = ingredients_result
 
+            if amount is None or not amount.isdigit() or int(amount) < 1:
+                raise serializers.ValidationError(INGREDIENT_AMOUNT_ERROR)
+
+            ingredients_result.append(
+                {'ingredients': ingredient,
+                 'amount': amount})
+
+        return ingredients_result
+
+    def validate_tags(self, tags_data):
+        """Валидация тегов"""
         tag_list = []
-        for tags_id in tags_data:
-            if tags_id in tag_list:
-                raise serializers.ValidationError(
-                    {TAG_ALREADY_ADDED}
-                )
+        for tag_id in tags_data:
+            if tag_id in tag_list:
+                raise serializers.ValidationError(TAG_ALREADY_ADDED)
             try:
-                Tag.objects.get(id=tags_id)
+                Tag.objects.get(id=tag_id)
             except Tag.DoesNotExist:
                 raise serializers.ValidationError(TAG_WITH_THIS_ID_NOT_EXISTS)
-            tag_list.append(tags_id)
+            tag_list.append(tag_id)
+
+        return tag_list
+
+    def validate(self, data):
+        """Метод для валидации данных перед созданием рецепта"""
+        ingredients = self.initial_data.get('ingredients')
+        tags_data = self.initial_data.get('tags')
+        image = self.initial_data.get('image')
+
+        if not ingredients:
+            raise serializers.ValidationError(INGREDIENTS_NOT_IN_RECIPE)
+        if not tags_data:
+            raise serializers.ValidationError(TAGS_NOT_IN_RECIPE)
+        if not image:
+            raise serializers.ValidationError(IMAGE_NOT_IN_RECIPE)
+
+        data['ingredients'] = self.validate_ingredients(ingredients)
+        data['tags'] = self.validate_tags(tags_data)
+
         return data
 
     def create_ingredients(self, ingredients, recipes):
