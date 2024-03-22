@@ -16,7 +16,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    image: nikita212212/foodgram_frontend
+    image: nikita212212/foodgram_backend
     env_file: .env
     volumes:
       - static:/app/static_django/
