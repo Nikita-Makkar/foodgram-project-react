@@ -185,10 +185,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             ):
                 raise serializers.ValidationError(
                     INGREDIENT_AMOUNT_FORMAT_ERROR)
-            if amount < 1:
-                raise serializers.ValidationError(
-                    INGREDIENT_AMOUNT_ERROR)
-
             ingredients_result.append(
                 {'ingredients': ingredient,
                  'amount': amount})
