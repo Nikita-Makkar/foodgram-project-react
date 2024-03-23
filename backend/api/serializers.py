@@ -156,11 +156,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         """Создание рецепта"""
         image = validated_data.pop('image')
         ingredients_data = validated_data.pop('ingredients')
-        tags = self.validated_data.get('tags')
-        recipes = Recipe.objects.create(image=image, **validated_data)
-        recipes.tags.set(tags)
-        self.create_ingredients(ingredients_data, recipes)
-        return recipes
+        tags_data = validated_data.pop('tags', [])
+        recipe = Recipe.objects.create(image=image, **validated_data)
+        self.create_ingredients(ingredients_data, recipe)
+        for tag_id in tags_data:
+            tag_instance = Tag.objects.get(id=tag_id)
+            recipe.tags.add(tag_instance)
+        return recipe
 
     def update(self, instance, validated_data):
         """Обновление рецепта"""
