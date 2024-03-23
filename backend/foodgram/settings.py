@@ -7,13 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY',
                        'o35&qx9l*ciacue^((q(&^jcc7549ptben+*e-wxsl&l5-l1)7')
 
-DEBUG = True
 
-#DEBUG = bool(int(os.getenv('DEBUG', False)))
 
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
+DEBUG = bool(int(os.getenv('DEBUG', False)))
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
+
 
 
 INSTALLED_APPS = [
@@ -78,13 +77,6 @@ DATABASES = {
             'NAME': None, }, },
 }
 
-# Для локальной разработки.
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -152,9 +144,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = ''
+MEDIA_ROOT = '/app/media/'
 
 
 STATIC_URL = '/static/django/'
 
-STATIC_ROOT = '/static_django/'
+STATIC_ROOT = '/app/static_django/'
