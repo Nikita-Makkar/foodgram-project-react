@@ -11,6 +11,8 @@ docker compose up
 
 backend docker exec -it infra-backend-1 bash
 
+docker exec -it foodgram-backend-1 bash
+
 Создайте и примените миграции:
 
 `python3 manage.py makemigrations
