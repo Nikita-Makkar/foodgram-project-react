@@ -8,7 +8,6 @@ from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.validators import UniqueValidator
 
 from api.constants import (IMAGE_NOT_IN_RECIPE, INGREDIENT_ALREADY_ADDED,
-                           INGREDIENT_AMOUNT_ERROR,
                            INGREDIENT_AMOUNT_FORMAT_ERROR,
                            INGREDIENT_WITH_THIS_ID_NOT_EXISTS,
                            INGREDIENTS_NOT_IN_RECIPE, NOT_ID_INGREDIENTS,
