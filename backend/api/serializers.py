@@ -156,8 +156,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         """Создание рецепта"""
         image = validated_data.pop('image')
         ingredients_data = validated_data.pop('ingredients')
-        recipes = Recipe.objects.create(image=image, **validated_data)
         tags = self.validated_data.get('tags')
+        recipes = Recipe.objects.create(image=image, **validated_data)
         recipes.tags.set(tags)
         self.create_ingredients(ingredients_data, recipes)
         return recipes
