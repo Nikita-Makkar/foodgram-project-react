@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from api.constants import (SUBSCRIPTION_ALREADY_EXISTS_ERROR,
@@ -67,3 +67,9 @@ class CustomUserViewSet(UserViewSet):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+    @action(detail=True, methods=['get'],
+            permission_classes=[AllowAny])
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
