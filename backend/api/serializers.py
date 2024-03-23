@@ -101,7 +101,8 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     INGREDIENT_WITH_THIS_ID_NOT_EXISTS)
 
-            if amount is None or not amount.isdigit() or int(amount) < 1:
+            if not isinstance(amount, str) or not amount.isdigit() \
+                    or int(amount) < 1:
                 raise serializers.ValidationError(INGREDIENT_AMOUNT_ERROR)
 
             ingredients_result.append(

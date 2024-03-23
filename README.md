@@ -6,6 +6,7 @@
 пароль: 2674812Nikita
 
 
+
 docker compose up
 
 backend docker exec -it infra-backend-1 bash
