@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Ingredient, IngredientRecipes, Recipe, RecipeFavorites,
+from .models import (Ingredient, IngredientRecipe, Recipe, FavoriteRecipe,
                      ShoppingList, Tag)
 
 
@@ -8,7 +8,7 @@ class RecipeIngredientInline(admin.TabularInline):
     """
     Админ-зона для интеграции добавления ингридиентов в рецепты.
     """
-    model = IngredientRecipes
+    model = IngredientRecipe
     extra = 1
     min_num = 1
 
@@ -24,7 +24,9 @@ class RecipeAdmin(admin.ModelAdmin):
     exclude = ('ingredients',)
 
     def favorites_count(self, obj):
-        return obj.favorites.count()
+        return obj.favorite.count()
+
+    favorites_count.short_description = 'Количество добавлений в избранное'
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -49,5 +51,5 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(RecipeFavorites)
+admin.site.register(FavoriteRecipe)
 admin.site.register(ShoppingList)

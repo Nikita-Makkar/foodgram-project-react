@@ -7,9 +7,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY',
                        'o35&qx9l*ciacue^((q(&^jcc7549ptben+*e-wxsl&l5-l1)7')
 
-DEBUG = bool(int(os.getenv('DEBUG', False)))
+DEBUG = True
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
+#DEBUG = bool(int(os.getenv('DEBUG', False)))
+
+#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
+
+ALLOWED_HOSTS = ['*',]
 
 
 INSTALLED_APPS = [
@@ -74,6 +78,14 @@ DATABASES = {
             'NAME': None, }, },
 }
 
+# Для локальной разработки.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -125,9 +137,9 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'SERIALIZERS': {
-        'user': 'users.serializers.CustomUserSerializer',
-        'current_user': 'users.serializers.CustomUserSerializer',
-        'user_create': 'users.serializers.CustomUserCreateSerializer',
+        'user': 'api.serializers.CustomUserSerializer',
+        'current_user': 'api.serializers.CustomUserSerializer',
+        'user_create': 'api.serializers.CustomUserCreateSerializer',
     },
     'PERMISSIONS': {
         'user': ('rest_framework.permissions.IsAuthenticated',),
@@ -140,9 +152,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '/app/media/'
+MEDIA_ROOT = ''
 
 
 STATIC_URL = '/static/django/'
 
-STATIC_ROOT = '/app/static_django/'
+STATIC_ROOT = '/static_django/'
