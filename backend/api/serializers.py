@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from api.constants import (IMAGE_NOT_IN_RECIPE, INGREDIENT_ALREADY_ADDED,
-                           INGREDIENT_AMOUNT_ERROR,
+                           INGREDIENT_AMOUNT_FORMAT_ERROR,
                            INGREDIENT_WITH_THIS_ID_NOT_EXISTS,
                            INGREDIENTS_NOT_IN_RECIPE, NOT_ID_INGREDIENTS,
                            SUBSCRIPTION_ALREADY_EXISTS_ERROR,
@@ -85,6 +85,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         """Валидация ингредиентов"""
         ingredients_result = []
         ingredient_ids = set()
+
         for ingredient_item in ingredients:
             ingredient_id = ingredient_item.get('id')
             amount = ingredient_item.get('amount')
@@ -100,15 +101,16 @@ class RecipeSerializer(serializers.ModelSerializer):
             except Ingredient.DoesNotExist:
                 raise serializers.ValidationError(
                     INGREDIENT_WITH_THIS_ID_NOT_EXISTS)
-
-            if not isinstance(amount, str) or not amount.isdigit() \
-                    or int(amount) < 1:
-                raise serializers.ValidationError(INGREDIENT_AMOUNT_ERROR)
+            if not (
+                isinstance(ingredient_item['amount'], int)
+                or ingredient_item['amount'].isdigit()
+            ):
+                raise serializers.ValidationError(
+                    INGREDIENT_AMOUNT_FORMAT_ERROR)
 
             ingredients_result.append(
                 {'ingredients': ingredient,
                  'amount': amount})
-
         return ingredients_result
 
     def validate_tags(self, tags_data):
