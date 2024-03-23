@@ -3,17 +3,12 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = os.getenv('SECRET_KEY',
                        'o35&qx9l*ciacue^((q(&^jcc7549ptben+*e-wxsl&l5-l1)7')
-
-
 
 DEBUG = bool(int(os.getenv('DEBUG', False)))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost').split(' ')
-
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
