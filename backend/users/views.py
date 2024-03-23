@@ -67,6 +67,7 @@ class CustomUserViewSet(UserViewSet):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
     @action(detail=True, methods=['get'],
             permission_classes=[AllowAny])
     def retrieve(self, request, *args, **kwargs):
