@@ -149,7 +149,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return FavoriteRecipe.objects.filter(recipe=obj, user=user).exists()
+        return FavoriteRecipe.objects.filter(
+            recipe=obj, user=user).exists()
 
     def get_is_in_shopping_cart(self, obj):
         """Проверка наличия рецепта в списке покупок"""
@@ -223,7 +224,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def create_ingredients(self, ingredients, recipe):
         """Добавление ингредиентов"""
-        IngredientRecipe.objects.bulk_create([
+        return IngredientRecipe.objects.bulk_create([
             IngredientRecipe(
                 recipe=recipe,
                 ingredient=ingredient['ingredients'],
@@ -247,11 +248,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.tags.clear()
         tags_data = validated_data.pop('tags', [])
         instance.tags.set(tags_data)
-        instance.save()
-        IngredientRecipe.objects.filter(recipe=instance).delete()
-        IngredientRecipe.objects.bulk_create(
-            self.create_ingredients(
-                validated_data.get('ingredients'), instance))
+        self.create_ingredients(validated_data.get('ingredients'), instance)
         return super().update(instance, validated_data)
 
 
