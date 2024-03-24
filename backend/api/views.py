@@ -4,14 +4,13 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
 from djoser.views import UserViewSet
 
-from api.constants import (AUTHENTION_ERROR, AUTHOR_NOT_FOUND_ERROR,
+from api.constants import (AUTHOR_NOT_FOUND_ERROR,
                            RECIPE_ALREADY_ADDED_ERROR,
                            RECIPE_ALREADY_ADDED_IN_CARD,
                            RECIPE_NOT_IN_FAVORITES_ERROR,
@@ -121,8 +120,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        if not self.request.user.is_authenticated:
-            raise AuthenticationFailed(AUTHENTION_ERROR)
         serializer.save(author=self.request.user)
 
     @action(methods=['GET'],
